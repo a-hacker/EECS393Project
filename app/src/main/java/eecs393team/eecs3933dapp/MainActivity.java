@@ -1,5 +1,6 @@
 package eecs393team.eecs3933dapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,6 +27,21 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    public void create(){
+        Intent intent = new Intent(this, CreateMain.class);
+        startActivity(intent);
+    }
+
+    public void edit(){
+        Intent intent = new Intent(this, EditMain.class);
+        startActivity(intent);
+    }
+
+    public void print(){
+        Intent intent = new Intent(this, PrintMain.class);
+        startActivity(intent);
     }
 
     @Override

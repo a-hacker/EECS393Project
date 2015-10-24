@@ -18,6 +18,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".CreateMain" >
+        </activity>
+        <activity
+            android:name=".EditMain"
+            android:label="@string/title_activity_edit_main"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".PrintMain"
+            android:label="@string/title_activity_print_main"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".ServerConnection"
+            android:label="@string/title_activity_server_connection"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

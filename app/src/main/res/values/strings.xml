@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">EECS 393 3D App</string>
     <string name="action_settings">Settings</string>
+    <string name="create">Create</string>
+    <string name="title_activity_edit_main">Edit</string>
+    <string name="title_activity_print_main">Print</string>
+    <string name="browse">Browse Printers</string>
+    <string name="title_activity_server_connection">ServerConnection</string>
 </resources>
