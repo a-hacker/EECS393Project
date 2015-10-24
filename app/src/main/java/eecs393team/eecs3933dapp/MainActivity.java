@@ -29,17 +29,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void create(){
+    public void create(View view){
         Intent intent = new Intent(this, CreateMain.class);
         startActivity(intent);
     }
 
-    public void edit(){
+    public void edit(View view){
         Intent intent = new Intent(this, EditMain.class);
         startActivity(intent);
     }
 
-    public void print(){
+    public void print(View view){
         Intent intent = new Intent(this, PrintMain.class);
         startActivity(intent);
     }
