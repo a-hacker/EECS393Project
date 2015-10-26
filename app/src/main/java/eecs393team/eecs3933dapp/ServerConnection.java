@@ -1,15 +1,14 @@
 package eecs393team.eecs3933dapp;
 
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.os.AsyncTask;
 
-public class ServerConnection {
+import java.io.Serializable;
+import java.net.*;
+
+public class ServerConnection extends AsyncTask<String, Void, Boolean> implements Serializable{
 
     private String ip;
+    private Socket server;
 
     public ServerConnection(String ip){
         this.ip = ip;
@@ -20,8 +19,18 @@ public class ServerConnection {
     }
 
     public boolean connectToServer(){
-        return false;
+        return doInBackground();
     }
+
+    protected Boolean doInBackground(String... strings){
+        try {
+            server= new Socket(ip, 8081);
+            return true;
+        } catch(Exception e){
+            return false;
+        }
+    }
+
 
     public boolean filesToSend(){
         return false;
