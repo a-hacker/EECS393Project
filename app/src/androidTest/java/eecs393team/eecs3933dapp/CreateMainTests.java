@@ -2,11 +2,15 @@ package eecs393team.eecs3933dapp;
 
 import android.app.Application;
 import android.app.Instrumentation;
+import android.content.Context;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.ActivityUnitTestCase;
 import android.test.TouchUtils;
+import android.test.UiThreadTest;
+import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -31,6 +35,7 @@ public class CreateMainTests extends ActivityInstrumentationTestCase2<CreateMain
         connecting_graphic = (ImageView) getActivity().findViewById(R.id.imageView);
     }
 
+    @SmallTest
     public void testPreconditions() {
         System.out.println("Testing Preconditions...");
         assertNotNull("mCreateMain is null", mCreateMain);
@@ -39,28 +44,58 @@ public class CreateMainTests extends ActivityInstrumentationTestCase2<CreateMain
         System.out.println("Done.");
     }
 
-    @MediumTest
+    @LargeTest
     public void testConnectionFailed(){
-        mCreateMain.setServer("localhost"); //localhost shouldn't be server
-        mCreateMain.connectToServer();
-        assertEquals("Back", launchNextButton.getText());
-        assertEquals(R.drawable.red_x, connecting_graphic.getDrawable());
+        mCreateMain.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mCreateMain.setServer("not an ip");
+                mCreateMain.connectToServer();
+                assertEquals("Bad text", "Back", launchNextButton.getText());
+            }
+        });
         Instrumentation.ActivityMonitor mainMonitor =
                 getInstrumentation().addMonitor(MainActivity.class.getName(),
                         null, false);
         TouchUtils.clickView(this, launchNextButton);
         MainActivity mainActivity = (MainActivity)
                 mainMonitor.waitForActivityWithTimeout(1000);
-        assertNotNull("CreateMain is null", mainActivity);
+        assertNotNull("MainActivity is null", mainActivity);
         assertEquals("Monitor for MainActivity has not been called", 1, mainMonitor.getHits());
         assertEquals("Activity is of wrong type",
-                CreateMain.class, mainActivity.getClass());
+                MainActivity.class, mainActivity.getClass());
         getInstrumentation().removeMonitor(mainMonitor);
         mainActivity.finish();
     }
 
-    @MediumTest
+    @LargeTest
     public void testConnectionSuccessful(){
-        assertTrue(false);
+        mCreateMain.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mCreateMain.setServer("129.22.21.148");
+                mCreateMain.connectToServer();
+            }
+        });
+        assertEquals("Bad text", "Start Video", launchNextButton.getText());
+        Instrumentation.ActivityMonitor startMonitor =
+                getInstrumentation().addMonitor(StartVideo.class.getName(),
+                                    null, false);
+        TouchUtils.clickView(this, launchNextButton);
+        StartVideo startActivity = (StartVideo)
+                startMonitor.waitForActivityWithTimeout(1000);
+        assertNotNull("StartActivity is null", startActivity);
+        assertEquals("Monitor for StartActivity has not been called", 1, startMonitor.getHits());
+        assertEquals("Activity is of wrong type",
+                StartVideo.class, startActivity.getClass());
+        getInstrumentation().removeMonitor(startMonitor);
+        startActivity.finish();
+    }
+
+    @SmallTest
+    public void testGetServer(){
+        assertEquals(mCreateMain.getServer().getServerIP(), "129.22.21.148");
     }
 }
+
+

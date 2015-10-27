@@ -22,7 +22,7 @@ public class CreateMain extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_main);
-        setServer("172.19.11.14");
+        setServer("129.22.21.148");
         connectToServer();
     }
 
