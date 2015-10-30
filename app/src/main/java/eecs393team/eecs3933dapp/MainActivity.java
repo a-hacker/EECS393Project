@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void scan(View view){
-        Intent intent = new Intent(this, ScanActivity.class);
+        //Intent intent = new Intent(this, ScanActivity.class);
+        Intent intent = new Intent(this, VideoCapture.class);
         startActivity(intent);
     }
 
