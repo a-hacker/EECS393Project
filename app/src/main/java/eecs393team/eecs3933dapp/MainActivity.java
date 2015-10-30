@@ -26,6 +26,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void scan(View view){
+        Intent intent = new Intent(this, ScanActivity.class);
+        startActivity(intent);
+    }
+
     public void edit(View view){
         //Intent intent = new Intent(this, EditMain.class);
         //startActivity(intent);

@@ -37,6 +37,14 @@
                 android:value="eecs393team.eecs3933dapp.MainActivity" />
         </activity>
         <activity
+            android:name=".ScanActivity"
+            android:label="Scan"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="eecs393team.eecs3933dapp.MainActivity" />
+        </activity>
+        <activity
             android:name=".PrintMain"
             android:label="@string/title_activity_print_main"
             android:theme="@style/AppTheme.NoActionBar" >

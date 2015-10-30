@@ -30,4 +30,5 @@
     <string name="axes">Axes:</string>
     <string name="resetToDefault">Reset to default value.</string>
     <string name="closePreferences">Save &amp; close</string>
+    <string name="scan">SCAN</string>
 </resources>
