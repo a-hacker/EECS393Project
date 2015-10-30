@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by josh on 10/30/15.
@@ -19,6 +23,9 @@ import java.util.Date;
 public class ScanActivity extends Activity{
     private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    private String ip;
+    private ServerConnection myConnection;
+    private Intent nextState;
     private Uri fileUri;
 
     @Override
@@ -75,6 +82,60 @@ public class ScanActivity extends Activity{
         return mediaFile;
     }
 
+    protected void setServer(String ip){
+        myConnection = new ServerConnection(ip);
+        this.ip = ip;
+    }
+
+    public ServerConnection getServer(){
+        return myConnection;
+    }
+
+    protected void connectToServer(){
+        //spawn loading icon
+        //connect to server
+        boolean success = false;
+        ServerConnection new_server = (ServerConnection) new ServerConnection(ip).execute(); //myConnection.connectToServer();
+        try {
+            success = new_server.get(20, TimeUnit.SECONDS);
+
+        } catch(Exception e){
+
+        }
+        Button next_button = (Button) findViewById(R.id.button);
+        //if true
+        if (success) {
+            //spawn check
+            ImageView connecting_graphic = (ImageView) findViewById(R.id.imageView);
+            connecting_graphic.setImageResource(R.drawable.check_mark);
+            //spawn start_video button
+            nextState = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+
+            nextState.putExtra("ServerConnection", myConnection);
+
+        }
+        //else
+        else {
+            // spawn failure
+            ImageView connecting_graphic = (ImageView) findViewById(R.id.imageView);
+            connecting_graphic.setImageResource(R.drawable.red_x);
+            // spawn back button
+            nextState = new Intent(this, MainActivity.class);
+        }
+    }
+
+    public void nextState(View view){
+        if (nextState.resolveActivity(getPackageManager()) != null) {
+            fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);  // create a file to save the video
+            nextState.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);  // set the image file name
+
+            nextState.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        }
+        else {
+            startActivity(nextState);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
@@ -82,6 +143,8 @@ public class ScanActivity extends Activity{
                 // Video captured and saved to fileUri specified in the Intent
                 //Toast.makeText(this, "Video saved to:\n" +
                  //       data.getData(), Toast.LENGTH_LONG).show();
+                setServer("172.20.11.49");
+                connectToServer();
             } else if (resultCode == RESULT_CANCELED) {
                 // User cancelled the video capture
             } else {
