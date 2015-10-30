@@ -12,7 +12,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -92,6 +103,7 @@ public class ScanActivity extends Activity{
     }
 
     protected void connectToServer(){
+
         //spawn loading icon
         //connect to server
         boolean success = false;
@@ -102,14 +114,38 @@ public class ScanActivity extends Activity{
         } catch(Exception e){
 
         }
-        Button next_button = (Button) findViewById(R.id.button);
+        //Button next_button = (Button) findViewById(R.id.button);
         //if true
         if (success) {
             //spawn check
+            OutputStream outputStream = new_server.getServerOutput();
+            FileInputStream in = null;
+            try {
+                in = new FileInputStream(fileUri.getPath());
+                // Write to the stream:
+                byte[] buffer = new byte[1024]; // 1KB buffer size
+                int length = 0;
+                while ((length = in.read(buffer, 0, buffer.length)) != -1) {
+                    outputStream.write(buffer, 0, length);
+                }
+                outputStream.flush();
+            }
+            catch(Exception e){
+
+            }
+            finally {
+                if (in != null)
+                    try {
+                        in.close();
+                    }
+                    catch(Exception e){
+
+                    }
+                new_server.close(); // Will close the outputStream, too.
+            }
             ImageView connecting_graphic = (ImageView) findViewById(R.id.imageView);
             connecting_graphic.setImageResource(R.drawable.check_mark);
-            //spawn start_video button
-            nextState = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+
 
             nextState.putExtra("ServerConnection", myConnection);
 
@@ -129,7 +165,8 @@ public class ScanActivity extends Activity{
             fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);  // create a file to save the video
             nextState.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);  // set the image file name
 
-            nextState.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+            nextState.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);     //spawn start_video button
+            nextState = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
         }
         else {
             startActivity(nextState);
@@ -137,14 +174,17 @@ public class ScanActivity extends Activity{
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {     //spawn start_video button
+            nextState = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
         if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // Video captured and saved to fileUri specified in the Intent
                 //Toast.makeText(this, "Video saved to:\n" +
                  //       data.getData(), Toast.LENGTH_LONG).show();
                 setServer("172.20.11.49");
+                //ServerConnection.sendFiles(fileUri.getPath());
                 connectToServer();
+                //upload(fileUri.getPath());
             } else if (resultCode == RESULT_CANCELED) {
                 // User cancelled the video capture
             } else {
@@ -152,5 +192,93 @@ public class ScanActivity extends Activity{
             }
         }
     }
+
+    public static int upload(String sourceFileUri) {
+        HttpURLConnection conn = null;
+        DataOutputStream dos = null;
+        DataInputStream inStream = null;
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "*****";
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1 * 1024 * 1024;
+        String responseFromServer = "";
+
+        File sourceFile = new File(sourceFileUri);
+        if (!sourceFile.isFile()) {
+            Log.e("Huzza", "Source File Does not exist");
+            return 0;
+        }
+        try { // open a URL connection to the Servlet
+            FileInputStream fileInputStream = new FileInputStream(sourceFile);
+            URL url = new URL("http://172.20.11.49");
+            conn = (HttpURLConnection) url.openConnection(); // Open a HTTP  connection to  the URL
+            conn.setDoInput(true); // Allow Inputs
+            conn.setDoOutput(true); // Allow Outputs
+            conn.setUseCaches(false); // Don't use a Cached Copy
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+            conn.setRequestProperty("uploaded_file", "stored.mp4");
+            dos = new DataOutputStream(conn.getOutputStream());
+
+            dos.writeBytes(twoHyphens + boundary + lineEnd);
+            dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""+ sourceFile.getName() + "\"" + lineEnd);
+            dos.writeBytes(lineEnd);
+
+            bytesAvailable = fileInputStream.available(); // create a buffer of  maximum size
+            Log.i("Huzza", "Initial .available : " + bytesAvailable);
+
+            bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            buffer = new byte[bufferSize];
+
+            // read file and write it into form...
+            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+            while (bytesRead > 0) {
+                dos.write(buffer, 0, bufferSize);
+                bytesAvailable = fileInputStream.available();
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            }
+
+            // send multipart form data necesssary after file data...
+            dos.writeBytes(lineEnd);
+            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+            // Responses from the server (code and message)
+            int serverResponseCode = conn.getResponseCode();
+            String serverResponseMessage = conn.getResponseMessage();
+
+            Log.i("Upload file to server", "HTTP Response is : " + serverResponseMessage + ": " + serverResponseCode);
+            // close streams
+            //Log.i("Upload file to server", fileName + " File is written");
+            fileInputStream.close();
+            dos.flush();
+            dos.close();
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+            Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//this block will give the response of upload link
+        try {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(conn
+                    .getInputStream()));
+            String line;
+            while ((line = rd.readLine()) != null) {
+                Log.i("Huzza", "RES Message: " + line);
+            }
+            rd.close();
+        } catch (IOException ioex) {
+            Log.e("Huzza", "error: " + ioex.getMessage(), ioex);
+        }
+        return 1;  // like 200 (Ok)
+
+    }
+
 
 }
