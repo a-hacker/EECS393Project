@@ -17,12 +17,14 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.File;
+import java.io.FileInputStream;
 
 public class STLViewActivity extends Activity implements FileListDialog.OnFileListDialogListener {
-    private STLView stlView;
+    protected STLView stlView;
 
     /** Called when the activity is first created. */
     @Override
@@ -103,7 +105,32 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
         setUpViews(Uri.fromFile(file));
     }
 
+    public void loadSTL(){
+        File baseDir = getFilesDir();
+        System.out.println(baseDir);
+        try {
+            Uri uri = Uri.fromFile(new File(baseDir + "/Dial.STL"));
+            setUpViews(uri);
+        } catch (Exception e){
+            System.out.println("Nope");
+        }
+        /*Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("*//*");
+        startActivityForResult(intent, 0);*/
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        System.out.println(data);
+        if (requestCode == 0 && resultCode == RESULT_OK){
+            setUpViews(data.getData());
+        }
+    }
+
     private void setUpViews(Uri uri) {
+        System.out.println("fdsaf");
         setContentView(R.layout.activity_stlview);
         final ToggleButton toggleButton = (ToggleButton) findViewById(R.id.rotateOrMoveToggleButton);
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -119,23 +146,21 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
         loadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-                intent.setType("*/*");
-
-                startActivityForResult(intent, 0);
+                loadSTL();
             }
         });
 
-        final ImageButton preferencesButton = (ImageButton) findViewById(R.id.preferncesButton);
+
+
+        final ImageButton preferencesButton = (ImageButton) findViewById(R.id.preferencesButton);
         preferencesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(STLViewActivity.this, PreferencesActivity.class);
                 startActivity(intent);
             }
+
+
         });
 
         if (uri != null) {

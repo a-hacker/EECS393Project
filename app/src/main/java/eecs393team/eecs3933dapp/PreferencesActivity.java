@@ -21,9 +21,9 @@ public class PreferencesActivity extends Activity {
     private SeekBar alphaSeekBar;
     private ToggleButton axesToggleButton;
     private ToggleButton gridsToggleButton;
-    private TextView objectColorView;
+    protected TextView objectColorView;
 
-    private void applyColor() {
+    protected void applyColor() {
         int color = redSeekBar.getProgress() * 255 / redSeekBar.getMax() << 16;
         color |= greenSeekBar.getProgress() * 255 / greenSeekBar.getMax() << 8;
         color |= blueSeekBar.getProgress() * 255 / blueSeekBar.getMax();

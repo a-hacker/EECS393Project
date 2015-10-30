@@ -16,7 +16,7 @@
             android:textOn="@string/toggleButtonRotate" android:textOff="@string/toggleButtonMove"
             android:layout_centerHorizontal="true" android:checked="true"
             android:layout_weight="1" android:visibility="invisible"></ToggleButton>
-        <ImageButton android:id="@+id/preferncesButton"
+        <ImageButton android:id="@+id/preferencesButton"
             android:src="@android:drawable/ic_menu_preferences"
             android:layout_height="wrap_content" android:layout_toRightOf="@+id/rotateOrMoveToggleButton"
             android:layout_width="wrap_content" android:layout_alignTop="@+id/rotateOrMoveToggleButton"

@@ -37,7 +37,7 @@ public class CreateMain extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_main);
-        setServer("172.19.7.127");
+        setServer("172.19.30.201");
         connectToServer();
     }
 
@@ -111,19 +111,6 @@ public class CreateMain extends Activity {
                 // Video capture failed, advise user
             }
         }
-    }
-
-    /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance(){
-        Camera c = null;
-        try {
-            c = Camera.open(); // attempt to get a Camera instance
-        }
-        catch (Exception e){
-            // Camera is not available (in use or does not exist)
-        }
-
-        return c; // returns null if camera is unavailable
     }
 
     /** Create a file Uri for saving an image or video */

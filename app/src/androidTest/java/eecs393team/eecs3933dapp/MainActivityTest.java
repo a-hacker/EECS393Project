@@ -60,19 +60,19 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @MediumTest
     public void testLaunchEdit(){
-        Instrumentation.ActivityMonitor editMainMonitor =
-                getInstrumentation().addMonitor(EditMain.class.getName(),
+        Instrumentation.ActivityMonitor STLViewMonitor =
+                getInstrumentation().addMonitor(STLViewActivity.class.getName(),
                         null, false);
         TouchUtils.clickView(this, edit_Button);
-        EditMain editMainActivity = (EditMain)
-                editMainMonitor.waitForActivityWithTimeout(1000);
+        STLViewActivity stlViewActivity = (STLViewActivity)
+                STLViewMonitor.waitForActivityWithTimeout(1000);
 
-        assertNotNull("EditMain is null", editMainActivity);
-        assertEquals("Monitor for EditMain has not been called", 1, editMainMonitor.getHits());
+        assertNotNull("STLViewActivity is null", stlViewActivity);
+        assertEquals("Monitor for STLViewActivity has not been called", 1, STLViewMonitor.getHits());
         assertEquals("Activity is of wrong type",
-                EditMain.class, editMainActivity.getClass());
-        getInstrumentation().removeMonitor(editMainMonitor);
-        editMainActivity.finish();
+                STLViewActivity.class, stlViewActivity.getClass());
+        getInstrumentation().removeMonitor(STLViewMonitor);
+        stlViewActivity.finish();
     }
 
     @MediumTest

@@ -73,28 +73,16 @@ public class CreateMainTests extends ActivityInstrumentationTestCase2<CreateMain
         mCreateMain.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mCreateMain.setServer("129.22.21.148");
+                mCreateMain.setServer("172.19.30.201");
                 mCreateMain.connectToServer();
             }
         });
         assertEquals("Bad text", "Start Video", launchNextButton.getText());
-        Instrumentation.ActivityMonitor startMonitor =
-                getInstrumentation().addMonitor(StartVideo.class.getName(),
-                                    null, false);
-        TouchUtils.clickView(this, launchNextButton);
-        StartVideo startActivity = (StartVideo)
-                startMonitor.waitForActivityWithTimeout(1000);
-        assertNotNull("StartActivity is null", startActivity);
-        assertEquals("Monitor for StartActivity has not been called", 1, startMonitor.getHits());
-        assertEquals("Activity is of wrong type",
-                StartVideo.class, startActivity.getClass());
-        getInstrumentation().removeMonitor(startMonitor);
-        startActivity.finish();
     }
 
     @SmallTest
     public void testGetServer(){
-        assertEquals(mCreateMain.getServer().getServerIP(), "129.22.21.148");
+        assertEquals(mCreateMain.getServer().getServerIP(), "172.19.30.201");
     }
 }
 

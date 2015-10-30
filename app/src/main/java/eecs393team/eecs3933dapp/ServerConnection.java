@@ -19,16 +19,16 @@ public class ServerConnection extends AsyncTask<String, Void, Boolean> implement
     }
 
     public boolean connectToServer(){
-        return doInBackground();
-    }
-
-    protected Boolean doInBackground(String... strings){
         try {
             server= new Socket(ip, 8081);
             return true;
         } catch(Exception e){
             return false;
         }
+    }
+
+    protected Boolean doInBackground(String... strings){
+        return connectToServer();
     }
 
 
