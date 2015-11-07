@@ -2,6 +2,7 @@ package eecs393team.eecs3933dapp;
 
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.widget.EditText;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -18,7 +19,7 @@ import java.net.*;
 
 public class ServerConnection extends AsyncTask<String, Void, Boolean> implements Serializable{
 
-    private String ip;
+    private static String ip;
     private Socket server;
 
     public ServerConnection(String ip){
@@ -61,7 +62,7 @@ public class ServerConnection extends AsyncTask<String, Void, Boolean> implement
         try {
             HttpClient httpclient = new DefaultHttpClient();
 
-            HttpPost httppost = new HttpPost("172.20.11.49");
+            HttpPost httppost = new HttpPost(MainActivity.serverIp);
 
             InputStreamEntity reqEntity = new InputStreamEntity(new FileInputStream(file), -1);
 			reqEntity.setContentType("binary/octet-stream");
