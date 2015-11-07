@@ -11,6 +11,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.*;
 
@@ -29,11 +31,20 @@ public class ServerConnection extends AsyncTask<String, Void, Boolean> implement
 
     public boolean connectToServer(){
         try {
-            server= new Socket(ip, 8081);
+            server= new Socket(ip, 8080);
             return true;
         } catch(Exception e){
             return false;
         }
+    }
+
+    protected OutputStream getServerOutput(){
+        try {
+            return server.getOutputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     protected Boolean doInBackground(String... strings){
@@ -42,25 +53,21 @@ public class ServerConnection extends AsyncTask<String, Void, Boolean> implement
 
 
     public String filesToSend(){
-        return "False";
+        return "false";
     }
 
-    public boolean sendFiles(){
-        String url = "http://yourserver";
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),
-                filesToSend());
+    public static boolean sendFiles(String filename){
+        File file = new File(filename);
         try {
             HttpClient httpclient = new DefaultHttpClient();
 
-            HttpPost httppost = new HttpPost(getServerIP());
+            HttpPost httppost = new HttpPost("172.20.11.49");
 
-            InputStreamEntity reqEntity = new InputStreamEntity(
-                    new FileInputStream(file), -1);
-            reqEntity.setContentType("binary/octet-stream");
+            InputStreamEntity reqEntity = new InputStreamEntity(new FileInputStream(file), -1);
+			reqEntity.setContentType("binary/octet-stream");
             reqEntity.setChunked(true); // Send in multiple parts if needed
             httppost.setEntity(reqEntity);
             HttpResponse response = httpclient.execute(httppost);
-            //Do something with response...
 
         } catch (Exception e) {
             // show error
@@ -73,4 +80,12 @@ public class ServerConnection extends AsyncTask<String, Void, Boolean> implement
         return false;
     }
 
+    public void close() {
+        try {
+            server.close();
+        }
+        catch (Exception e){
+
+        }
+    }
 }

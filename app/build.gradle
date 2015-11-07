@@ -16,6 +16,7 @@ android {
     buildToolsVersion "23.0.1"
     useLibrary 'org.apache.http.legacy'
 
+    useLibrary'org.apache.http.legacy'
     defaultConfig {
         applicationId "eecs393team.eecs3933dapp"
         minSdkVersion 17
