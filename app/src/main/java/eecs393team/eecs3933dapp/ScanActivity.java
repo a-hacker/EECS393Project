@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -181,7 +182,8 @@ public class ScanActivity extends Activity{
                 // Video captured and saved to fileUri specified in the Intent
                 //Toast.makeText(this, "Video saved to:\n" +
                  //       data.getData(), Toast.LENGTH_LONG).show();
-                setServer("172.20.10.78");
+                Log.d("ScanActivity", "Server IP: " + MainActivity.serverIp);
+                setServer(MainActivity.serverIp);
                 //ServerConnection.sendFiles(fileUri.getPath());
                 connectToServer();
                 //upload(fileUri.getPath());

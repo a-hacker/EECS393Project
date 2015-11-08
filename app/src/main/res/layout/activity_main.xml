@@ -40,6 +40,12 @@
             android:text="@string/title_activity_print_main"
             android:onClick="print"/>
 
+        <EditText
+            android:id="@+id/server_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="phone"/>
+
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_main" />
