@@ -181,7 +181,7 @@ public class ScanActivity extends Activity{
                 // Video captured and saved to fileUri specified in the Intent
                 //Toast.makeText(this, "Video saved to:\n" +
                  //       data.getData(), Toast.LENGTH_LONG).show();
-                setServer("172.20.11.49");
+                setServer("172.20.39.178");
                 //ServerConnection.sendFiles(fileUri.getPath());
                 connectToServer();
                 //upload(fileUri.getPath());
