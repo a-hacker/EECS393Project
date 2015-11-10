@@ -63,7 +63,8 @@
         </activity>
         <activity
             android:name=".CalibrationActivity"
-            android:label="Scan"
+            android:screenOrientation="landscape"
+            android:label="Calibration"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
