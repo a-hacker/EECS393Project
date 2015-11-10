@@ -40,6 +40,13 @@
             android:text="@string/title_activity_print_main"
             android:onClick="print"/>
 
+        <Button
+            android:id="@+id/calibration_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_activity_calibrate_main"
+            android:onClick="calibrate"/>
+
         <EditText
             android:id="@+id/server_ip"
             android:layout_width="wrap_content"

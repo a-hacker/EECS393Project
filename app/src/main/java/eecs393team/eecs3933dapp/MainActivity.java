@@ -37,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+    public void calibrate(View view){
+        Intent intent = new Intent(this, CalibrationActivity.class);
+        startActivity(intent);
+    }
+
     public void edit(View view){
         //Intent intent = new Intent(this, EditMain.class);
         //startActivity(intent);
