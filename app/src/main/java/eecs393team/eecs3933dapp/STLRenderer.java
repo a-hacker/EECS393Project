@@ -16,7 +16,7 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by Callum on 10/29/2015.
  */
 public class STLRenderer implements GLSurfaceView.Renderer {
-    public static final int FRAME_BUFFER_COUNT = 2;
+    public static final int FRAME_BUFFER_COUNT = 1;
 
     public float angleX;
     public float angleY;
@@ -30,7 +30,7 @@ public class STLRenderer implements GLSurfaceView.Renderer {
     public static float alpha;
     public static boolean displayAxes = true;
     public static boolean displayGrids = true;
-    private static int bufferCounter = 2;
+    private static int bufferCounter = 1;
 
     private STLObject stlObject;
 
@@ -76,7 +76,6 @@ public class STLRenderer implements GLSurfaceView.Renderer {
         if (bufferCounter < 1) {
             return;
         }
-        bufferCounter--;
 
         gl.glLoadIdentity();
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
@@ -163,14 +162,6 @@ public class STLRenderer implements GLSurfaceView.Renderer {
         gl.glLoadIdentity();
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
-        if (stlObject != null) {
-            //Log.i("maxX:" + stlObject.maxX);
-            //Log.i("minX:" + stlObject.minX);
-            //Log.i("maxY:" + stlObject.maxY);
-            //Log.i("minY:" + stlObject.minY);
-            //Log.i("maxZ:" + stlObject.maxZ);
-            //Log.i("minZ:" + stlObject.minZ);
-        }
 
         GLU.gluPerspective(gl, 45f, aspectRatio, 1f, 5000f);// (stlObject.maxZ - stlObject.minZ) * 10f + 100f);
 
