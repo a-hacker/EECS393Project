@@ -35,6 +35,8 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
         String fileName = getIntent().getStringExtra(getFilesDir().toString());
         if (fileName != null){
             fileToLoad = fileName;
+        } else {
+            fileToLoad = "dial.stl"; //for testing
         }
         PackageManager manager = getPackageManager();
         ApplicationInfo appInfo = null;
@@ -136,7 +138,6 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
     }
 
     private void setUpViews(Uri uri) {
-        System.out.println("fdsaf");
         setContentView(R.layout.activity_stlview);
         final ToggleButton toggleButton = (ToggleButton) findViewById(R.id.rotateOrMoveToggleButton);
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -147,16 +148,6 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
                 }
             }
         });
-
-        final ImageButton loadButton = (ImageButton) findViewById(R.id.loadButton);
-        loadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadSTL();
-            }
-        });
-
-
 
         final ImageButton preferencesButton = (ImageButton) findViewById(R.id.preferencesButton);
         preferencesButton.setOnClickListener(new View.OnClickListener() {
