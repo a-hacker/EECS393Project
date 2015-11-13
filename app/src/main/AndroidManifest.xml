@@ -62,6 +62,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="eecs393team.eecs3933dapp.STLViewActivity" />
         </activity>
+        <activity
+            android:name=".Gallery"
+            android:label="@string/title_activity_gallery"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="eecs393team.eecs3933dapp.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

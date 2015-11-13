@@ -26,11 +26,16 @@ import java.io.FileInputStream;
 public class STLViewActivity extends Activity implements FileListDialog.OnFileListDialogListener {
     protected STLView stlView;
 
+    private String fileToLoad;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        String fileName = getIntent().getStringExtra(getFilesDir().toString());
+        if (fileName != null){
+            fileToLoad = fileName;
+        }
         PackageManager manager = getPackageManager();
         ApplicationInfo appInfo = null;
         try {
@@ -47,6 +52,7 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
             //Log.i("Uri:" + uri);
         }
         setUpViews(uri);
+        loadSTL();
     }
 
     @Override
@@ -109,7 +115,7 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
         File baseDir = getFilesDir();
         System.out.println(baseDir);
         try {
-            Uri uri = Uri.fromFile(new File(baseDir + "/Dial.STL"));
+            Uri uri = Uri.fromFile(new File(baseDir + "/" + fileToLoad));
             setUpViews(uri);
         } catch (Exception e){
             System.out.println("Nope");
