@@ -36,7 +36,11 @@ public class Gallery extends AppCompatActivity {
         //make sure the path specified is a valid directory
         if (dir.isDirectory()){
             for (final String fileName: dir.list()) {
-                //create button for each file
+                if (!fileName.endsWith(".STL")){
+                    //if the file isn't an STL file, don't allow it to be loaded
+                    continue;
+                }
+                //create button for each STL file
                 Button fileButton = new Button(this);
                 fileButton.setText(fileName);
                 layout.addView(fileButton, params);
