@@ -25,13 +25,13 @@ public class Gallery extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        baseDir = new File("/storage/emulated/legacy/Download");
+        //baseDir = new File("/storage/emulated/legacy/Download");
         buttons = new HashMap<String, Button>();
         setContentView(R.layout.activity_gallery);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         File dir = getFilesDir();
-        dir = baseDir;
+        //dir = baseDir;
         final String path = dir.toString();
         Log.d("blah", path);
         LinearLayout layout = (LinearLayout)findViewById(R.id.linear);

@@ -34,6 +34,7 @@ public class GalleryTest extends ActivityInstrumentationTestCase2<Gallery> {
         for (String fileName: mGal.buttons.keySet()) {
             if (fileName.endsWith(".STL")){
                 assertLoad(mGal, mGal.buttons.get(fileName));
+                return;
             }
         }
     }
@@ -60,7 +61,26 @@ public class GalleryTest extends ActivityInstrumentationTestCase2<Gallery> {
         assertEquals("Activity is of wrong type",
                 STLViewActivity.class, stlActivity.getClass());
         getInstrumentation().removeMonitor(stlViewMonitor);
+        getInstrumentation().callActivityOnPause(stlActivity);
+        getInstrumentation().callActivityOnResume(stlActivity);
+        assertPref(stlActivity);
         stlActivity.finish();
+    }
+
+    public void assertPref(STLViewActivity stl){
+        Instrumentation.ActivityMonitor prefMonitor =
+                getInstrumentation().addMonitor(PreferencesActivity.class.getName(),
+                        null, false);
+        ImageButton preferences = (ImageButton) stl.findViewById(R.id.preferencesButton);
+        TouchUtils.clickView(this, preferences);
+        PreferencesActivity prefActivity = (PreferencesActivity)
+                prefMonitor.waitForActivityWithTimeout(1000);
+        assertNotNull("PreferencesActivity is null", prefActivity);
+        assertEquals("Monitor for PreferencesActivity has not been called", 1, prefMonitor.getHits());
+        assertEquals("Activity is of wrong type",
+                PreferencesActivity.class, prefActivity.getClass());
+        getInstrumentation().removeMonitor(prefMonitor);
+        prefActivity.finish();
     }
 
 }

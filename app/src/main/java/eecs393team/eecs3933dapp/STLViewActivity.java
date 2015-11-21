@@ -98,7 +98,7 @@ public class STLViewActivity extends Activity{
 
     public void loadSTL(){
         File baseDir = getFilesDir();
-        baseDir = new File("/storage/emulated/legacy/Download");
+        //baseDir = new File("/storage/emulated/legacy/Download");
         try {
             Uri uri = Uri.fromFile(new File(baseDir + "/" + fileToLoad));
             setUpViews(uri);

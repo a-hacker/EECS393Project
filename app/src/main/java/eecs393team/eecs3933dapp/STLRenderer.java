@@ -16,7 +16,7 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by Callum on 10/29/2015.
  */
 public class STLRenderer implements GLSurfaceView.Renderer {
-    public static final int FRAME_BUFFER_COUNT = 1;
+    public static final int FRAME_BUFFER_COUNT = 20;
 
     public float angleX;
     public float angleY;
@@ -30,7 +30,7 @@ public class STLRenderer implements GLSurfaceView.Renderer {
     public static float alpha;
     public static boolean displayAxes = true;
     public static boolean displayGrids = true;
-    private static int bufferCounter = 1;
+    private static int bufferCounter = 20;
 
     private STLObject stlObject;
 
@@ -76,6 +76,8 @@ public class STLRenderer implements GLSurfaceView.Renderer {
         if (bufferCounter < 1) {
             return;
         }
+
+        bufferCounter--;
 
         gl.glLoadIdentity();
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);

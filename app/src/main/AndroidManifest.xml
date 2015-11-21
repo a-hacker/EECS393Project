@@ -47,11 +47,11 @@
         <activity
             android:name=".STLViewActivity"
             android:label="@string/title_activity_stlview"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".Gallery"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="eecs393team.eecs3933dapp.MainActivity" />
+                android:value="eecs393team.eecs3933dapp.Gallery" />
         </activity>
         <activity
             android:name=".PreferencesActivity"
