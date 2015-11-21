@@ -34,7 +34,7 @@ public class STLViewActivityTest extends ActivityInstrumentationTestCase2<STLVie
     }
 
     @SmallTest
-    public void testPreconditions() {
+    public void estPreconditions() {
         System.out.println("Testing Preconditions...");
         assertNotNull("mCreateMain is null", mSTLViewAct);
         assertEquals("Activity is of wrong type",
@@ -42,7 +42,7 @@ public class STLViewActivityTest extends ActivityInstrumentationTestCase2<STLVie
         System.out.println("Done.");
     }
 
-    public void testPreferences(){
+    public void estPreferences(){
         Instrumentation.ActivityMonitor prefMonitor =
                 getInstrumentation().addMonitor(PreferencesActivity.class.getName(),
                         null, false);
@@ -57,11 +57,4 @@ public class STLViewActivityTest extends ActivityInstrumentationTestCase2<STLVie
         prefActivity.finish();
     }
 
-    public void testLoadFile(){
-        TouchUtils.clickView(this, loadButton);
-        assertNotNull(mSTLViewAct.stlView);
-        Instrumentation ins = getInstrumentation();
-        ins.callActivityOnPause(mSTLViewAct);
-        ins.callActivityOnResume(mSTLViewAct);
-    }
 }

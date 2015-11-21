@@ -203,6 +203,8 @@ public class STLView extends GLSurfaceView {
             case MotionEvent.ACTION_UP:
                 if (touchMode == TOUCH_DRAG) {
                     touchMode = TOUCH_NONE;
+                    requestRender();
+                    STLRenderer.requestRedraw();
                     break;
                 }
         }

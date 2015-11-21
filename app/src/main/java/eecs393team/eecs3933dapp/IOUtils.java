@@ -45,33 +45,6 @@ public class IOUtils {
         return count;
     }
 
-    /**
-     * Copy <code>length</code> size of <code>input</code> stream to <code>output</code> stream.
-     *
-     * @param input
-     * @param output
-     * @return long copied length
-     * @throws IOException
-     */
-    public static long copy(InputStream input, OutputStream output, int length) throws IOException {
-        byte[] buffer = new byte[length];
-        int count = 0;
-        int n = 0;
-        int max = length;
-        while ((n = input.read(buffer, 0, max)) != -1) {
-            output.write(buffer, 0, n);
-            count += n;
-            if (count > length) {
-                break;
-            }
-
-            max -= n;
-            if (max <= 0) {
-                break;
-            }
-        }
-        return count;
-    }
 
     /**
      * Close <code>closeable</code> quietly.

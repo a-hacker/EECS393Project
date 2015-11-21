@@ -44,11 +44,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void edit(View view){
-        //Intent intent = new Intent(this, EditMain.class);
-        //startActivity(intent);
-
-        //Commented out prior Edit intent because this may not be the final location for this.
-        Intent intent = new Intent(this, STLViewActivity.class);
+        Intent intent = new Intent(this, Gallery.class);
         startActivity(intent);
     }
 
