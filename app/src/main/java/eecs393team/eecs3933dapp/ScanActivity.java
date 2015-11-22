@@ -140,8 +140,9 @@ public class ScanActivity extends Activity{
             finally {
                 if (in != null)
                     try {
-                        in.close();
+
                         waitForResponse(new_server);
+                        in.close();
                     }
                     catch(Exception e){
 
@@ -169,14 +170,29 @@ public class ScanActivity extends Activity{
         FileOutputStream out = null;
         InputStream inputStream = new_server.getServerInput();
         try{
-            out = new FileOutputStream(new File(Environment.DIRECTORY_DOCUMENTS, "01"));
+            Log.d("File Recieve", "obtaining file info");
+            File STL = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "STLS");
+            if (!STL.exists()){
+                if (!STL.mkdirs())
+                    Log.d("File Recieve", "Folder not created");
+                else
+                    Log.d("File Recieve", "Folder created");
+            }
+            String path = STL.getAbsolutePath();
+            File f = new File(path+"/01.STL");
+            Log.d("File Recieve", "obtaining out info");
+            out = new FileOutputStream(f);
+            Log.d("File Recieve", "obtained out info");
             byte[] buffer = new byte[1024]; // 1KB buffer size
             int length = 0;
+            Log.d("File Recieve", "Starting to receive");
             while ((length = inputStream.read(buffer, 0, buffer.length)) != -1) {
                 out.write(buffer, 0, length);
+                Log.d("File Recieve", "Got bytes!");
             }
             out.flush();
         } catch(Exception e) {
+            Log.d("File Recieve", e.getMessage());
         } finally {
             if (out != null)
                 try {

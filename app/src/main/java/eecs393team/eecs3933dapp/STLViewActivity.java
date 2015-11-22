@@ -36,10 +36,12 @@ public class STLViewActivity extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String fileName = getIntent().getStringExtra(getFilesDir().toString());
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+        String fileName = getIntent().getStringExtra(path);
         if (fileName != null){
             fileToLoad = fileName;
         } else {
+            Log.d("File opener", "No intent data");
             fileToLoad = "dial.stl"; //for testing
         }
         PackageManager manager = getPackageManager();

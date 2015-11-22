@@ -42,7 +42,7 @@ public class Gallery extends AppCompatActivity {
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         //make sure the path specified is a valid directory
         if (dir.exists() && dir.isDirectory() && dir.listFiles() != null){
-            for (final String fileName: dir.list()) {
+            for (String fileName: dir.list()) {
                 Log.d("File is", fileName);
                 if (!fileName.endsWith(".STL")){
                     //if the file isn't an STL file, don't allow it to be loaded
@@ -57,7 +57,9 @@ public class Gallery extends AppCompatActivity {
                 fileButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
                         Intent intent = new Intent(currentActivity, STLViewActivity.class);
-                        intent.putExtra(path, fileName);
+                        Button b = (Button)view;
+                        String buttonText = b.getText().toString();
+                        intent.putExtra(path, buttonText);
                         startActivity(intent);
                     }
                 });
