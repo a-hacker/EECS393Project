@@ -52,4 +52,5 @@
             android:layout_height="wrap_content"
             android:inputType="phone"/>
     </android.support.design.widget.AppBarLayout>
+    <include layout="@layout/content_main"/>
 </android.support.design.widget.CoordinatorLayout>
