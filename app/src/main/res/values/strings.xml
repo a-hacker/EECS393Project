@@ -45,4 +45,6 @@
     <string name="original">Original</string>
     <string name="undistorted">Undistorted</string>
     <string name="title_activity_gallery">Gallery</string>
+    <string name="import_stl">Import</string>
+    <string name="export_stl">Export</string>
 </resources>

@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,6 +23,9 @@ import android.widget.ToggleButton;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class STLViewActivity extends Activity{
     protected STLView stlView;
@@ -90,15 +94,13 @@ public class STLViewActivity extends Activity{
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (stlView != null) {
-            //Log.i("onSaveInstanceState");
             outState.putParcelable("STLFileName", stlView.getUri());
             outState.putBoolean("isRotate", stlView.isRotate());
         }
     }
 
     public void loadSTL(){
-        File baseDir = getFilesDir();
-        //baseDir = new File("/storage/emulated/legacy/Download");
+        File baseDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         try {
             Uri uri = Uri.fromFile(new File(baseDir + "/" + fileToLoad));
             setUpViews(uri);
@@ -157,5 +159,11 @@ public class STLViewActivity extends Activity{
         }
     }
 
-
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
 }

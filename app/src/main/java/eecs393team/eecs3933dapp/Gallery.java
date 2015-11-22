@@ -1,7 +1,9 @@
 package eecs393team.eecs3933dapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,18 +32,21 @@ public class Gallery extends AppCompatActivity {
         setContentView(R.layout.activity_gallery);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        File dir = getFilesDir();
+        //File dir = getFilesDir();
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         //dir = baseDir;
         final String path = dir.toString();
-        Log.d("blah", path);
+        Log.d("Path is:", path);
+        Log.d("ExPath is", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString());
         LinearLayout layout = (LinearLayout)findViewById(R.id.linear);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         //make sure the path specified is a valid directory
-        if (dir.isDirectory()){
+        if (dir.exists() && dir.isDirectory() && dir.listFiles() != null){
             for (final String fileName: dir.list()) {
+                Log.d("File is", fileName);
                 if (!fileName.endsWith(".STL")){
                     //if the file isn't an STL file, don't allow it to be loaded
-                    continue;
+                   continue;
                 }
                 //create button for each STL file
                 Button fileButton = new Button(this);
@@ -63,7 +68,6 @@ public class Gallery extends AppCompatActivity {
     }
 
     public File get_path() {
-        return getFilesDir();
+        return Environment.getExternalStorageDirectory();
     }
-
 }
