@@ -13,6 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.*;
@@ -42,6 +43,15 @@ public class ServerConnection extends AsyncTask<String, Void, Boolean> implement
     protected OutputStream getServerOutput(){
         try {
             return server.getOutputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    protected InputStream getServerInput(){
+        try {
+            return server.getInputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -18,7 +18,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -35,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 public class ScanActivity extends Activity{
     private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    private static int fileNum = 0;
     private String ip;
     private ServerConnection myConnection;
     private Intent nextState;
@@ -138,6 +141,7 @@ public class ScanActivity extends Activity{
                 if (in != null)
                     try {
                         in.close();
+                        waitForResponse(new_server);
                     }
                     catch(Exception e){
 
@@ -158,6 +162,30 @@ public class ScanActivity extends Activity{
             connecting_graphic.setImageResource(R.drawable.red_x);
             // spawn back button
             nextState = new Intent(this, MainActivity.class);
+        }
+    }
+
+    public void waitForResponse(ServerConnection new_server){
+        FileOutputStream out = null;
+        InputStream inputStream = new_server.getServerInput();
+        try{
+            out = new FileOutputStream(new File(Environment.DIRECTORY_DOCUMENTS, "01"));
+            byte[] buffer = new byte[1024]; // 1KB buffer size
+            int length = 0;
+            while ((length = inputStream.read(buffer, 0, buffer.length)) != -1) {
+                out.write(buffer, 0, length);
+            }
+            out.flush();
+        } catch(Exception e) {
+        } finally {
+            if (out != null)
+                try {
+                    out.close();
+                }
+                catch(Exception e){
+
+                }
+            new_server.close(); // Will close the outputStream, too.
         }
     }
 
@@ -187,6 +215,7 @@ public class ScanActivity extends Activity{
                 //ServerConnection.sendFiles(fileUri.getPath());
                 connectToServer();
                 //upload(fileUri.getPath());
+
             } else if (resultCode == RESULT_CANCELED) {
                 // User cancelled the video capture
             } else {
