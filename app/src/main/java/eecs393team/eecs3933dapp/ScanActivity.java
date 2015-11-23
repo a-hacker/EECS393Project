@@ -125,41 +125,57 @@ public class ScanActivity extends Activity{
             //spawn check
             Log.d("ScanActivity", "Starting to send");
             OutputStream outputStream = new_server.getServerOutput();
+            InputStream inputStream = new_server.getServerInput();
+            Thread thread = new Thread(new ServerListener(inputStream, new_server, ip));
+            thread.start();
             FileInputStream in = null;
             try {
+                Log.d("ScanActivity", "Creating file");
                 in = new FileInputStream(fileUri.getPath());
                 // Write to the stream:
                 byte[] buffer = new byte[1024]; // 1KB buffer size
                 int length = 0;
+                Log.d("ScanActivity", "Begining send");
                 while ((length = in.read(buffer, 0, buffer.length)) != -1) {
                     outputStream.write(buffer, 0, length);
                 }
+                Log.d("ScanActivity", "Sent");
                 outputStream.flush();
+                //waitForResponse(new_server, inputStream);
+                //outputStream.flush();
+                /*
                 Log.d("ScanActivity", "waiting for reply");
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                Log.d("ScanActivity", "created byte strewam");
                 InputStream inputStream = new_server.getServerInput();
+                Log.d("ScanActivity", "get server stuff");
                 byte[] b = new byte[1024];
                 while ( inputStream.read(b) != -1) {
+                    Log.d("ScanActivity", "wriiiiitnin");
                     baos.write(b);
                 }
                 byte[] bytes = baos.toByteArray();
                 Log.d("ScanActivity", "The byte array");
-                Log.d("ScanActivity", bytes.toString());
+                Log.d("ScanActivity", bytes.toString()); */
+                //outputStream.flush();
             }
             catch(Exception e){
-
             }
             finally {
                 if (in != null)
                     try {
-
-                        waitForResponse(new_server);
+                        thread.join();
                         in.close();
+                        outputStream.close();
+
+                        //waitForResponse(new_server, inputStream);
+                        //in.close();
                     }
                     catch(Exception e){
 
                     }
+
                 new_server.close(); // Will close the outputStream, too.
             }
             ImageView connecting_graphic = (ImageView) findViewById(R.id.imageView);
@@ -179,9 +195,13 @@ public class ScanActivity extends Activity{
         }
     }
 
-    public void waitForResponse(ServerConnection new_server){
+    public void waitForResponse(ServerConnection new_server, InputStream inputStream){
         FileOutputStream out = null;
-        InputStream inputStream = new_server.getServerInput();
+        //InputStream inputStream = new_server.getServerInput();
+        if (inputStream == null){
+            Log.d("File Recieve", "No inputstream");
+            int x = 1/0; //I am bad
+        }
         try{
             Log.d("File Recieve", "obtaining file info");
             File STL = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "STLS");
@@ -200,12 +220,14 @@ public class ScanActivity extends Activity{
             int length = 0;
             Log.d("File Recieve", "Starting to receive");
             while ((length = inputStream.read(buffer, 0, buffer.length)) != -1) {
+                Log.d("File stuff", inputStream.toString());
                 out.write(buffer, 0, length);
                 Log.d("File Recieve", "Got bytes!");
             }
+            Log.d("File Receive", "done");
             out.flush();
         } catch(Exception e) {
-            Log.d("File Recieve", e.getMessage());
+            Log.d("Excepction", e.toString());
         } finally {
             if (out != null)
                 try {
@@ -214,7 +236,7 @@ public class ScanActivity extends Activity{
                 catch(Exception e){
 
                 }
-            new_server.close(); // Will close the outputStream, too.
+            //new_server.close(); // Will close the outputStream, too.
         }
     }
 

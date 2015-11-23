@@ -22,9 +22,14 @@ public class ServerConnection extends AsyncTask<String, Void, Boolean> implement
 
     private static String ip;
     private Socket server;
+    private int port = 8080;
 
     public ServerConnection(String ip){
         this.ip = ip;
+    }
+    public ServerConnection(String ip, int port){
+        this.ip = ip;
+        this.port = port;
     }
 
     public String getServerIP(){
@@ -33,7 +38,7 @@ public class ServerConnection extends AsyncTask<String, Void, Boolean> implement
 
     public boolean connectToServer(){
         try {
-            server= new Socket(ip, 8080);
+            server= new Socket(ip, port);
             return true;
         } catch(Exception e){
             return false;
@@ -56,6 +61,10 @@ public class ServerConnection extends AsyncTask<String, Void, Boolean> implement
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean isOpen(){
+        return server.isConnected();
     }
 
     protected Boolean doInBackground(String... strings){

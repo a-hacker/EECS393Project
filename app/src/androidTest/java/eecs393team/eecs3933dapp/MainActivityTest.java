@@ -26,7 +26,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     protected void setUp() throws Exception {
         super.setUp();
         mMainActivity = getActivity();
-        create_Button = (Button) getActivity().findViewById(R.id.create_button);
+        //create_Button = (Button) getActivity().findViewById(R.id.create_button);
         edit_Button = (Button) getActivity().findViewById(R.id.edit_button);
     }
 
@@ -37,7 +37,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
                 MainActivity.class, mMainActivity.getClass());
         System.out.println("Done.");
     }
-
+    /*
     @MediumTest
     public void testLaunchCreate(){
         System.out.println("Starting Create test...");
@@ -55,7 +55,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         getInstrumentation().removeMonitor(createMainMonitor);
         System.out.println("Finished Create test.");
         createMainActivity.finish();
-    }
+    } */
 
     @MediumTest
     public void testLaunchGallery(){
