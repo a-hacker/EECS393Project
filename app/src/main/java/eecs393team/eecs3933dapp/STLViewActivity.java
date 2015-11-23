@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,22 +23,33 @@ import android.widget.ToggleButton;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-public class STLViewActivity extends Activity implements FileListDialog.OnFileListDialogListener {
+public class STLViewActivity extends Activity{
     protected STLView stlView;
+
+    private String fileToLoad;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+        String fileName = getIntent().getStringExtra(path);
+        if (fileName != null){
+            fileToLoad = fileName;
+        } else {
+            Log.d("File opener", "No intent data");
+            fileToLoad = "dial.stl"; //for testing
+        }
         PackageManager manager = getPackageManager();
         ApplicationInfo appInfo = null;
         try {
             appInfo = manager.getApplicationInfo(getPackageName(), 0);
             //Log.setDebug((appInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) == ApplicationInfo.FLAG_DEBUGGABLE);
         } catch (PackageManager.NameNotFoundException e) {
-            //Log.d(e);
         }
 
         Intent intent = getIntent();
@@ -47,13 +59,13 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
             //Log.i("Uri:" + uri);
         }
         setUpViews(uri);
+        loadSTL();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (stlView != null) {
-            //Log.i("onResume");
             STLRenderer.requestRedraw();
             stlView.onResume();
         }
@@ -63,7 +75,6 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
     protected void onPause() {
         super.onPause();
         if (stlView != null) {
-            //Log.i("onPause");
             stlView.onPause();
         }
     }
@@ -85,52 +96,29 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (stlView != null) {
-            //Log.i("onSaveInstanceState");
             outState.putParcelable("STLFileName", stlView.getUri());
             outState.putBoolean("isRotate", stlView.isRotate());
         }
     }
 
-    @Override
-    public void onClickFileList(File file) {
-        if (file == null) {
-            return;
-        }
-
-        SharedPreferences config = getSharedPreferences("PathSetting", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor configEditor = config.edit();
-        configEditor.putString("lastPath", file.getParent());
-        configEditor.commit();
-
-        setUpViews(Uri.fromFile(file));
-    }
-
     public void loadSTL(){
-        File baseDir = getFilesDir();
-        System.out.println(baseDir);
+        File baseDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         try {
-            Uri uri = Uri.fromFile(new File(baseDir + "/Dial.STL"));
+            Uri uri = Uri.fromFile(new File(baseDir + "/" + fileToLoad));
             setUpViews(uri);
         } catch (Exception e){
-            System.out.println("Nope");
+            Log.e("OnLoad", "Failed to load " + fileToLoad);
         }
-        /*Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("*//*");
-        startActivityForResult(intent, 0);*/
-
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        System.out.println(data);
         if (requestCode == 0 && resultCode == RESULT_OK){
             setUpViews(data.getData());
         }
     }
 
     private void setUpViews(Uri uri) {
-        System.out.println("fdsaf");
         setContentView(R.layout.activity_stlview);
         final ToggleButton toggleButton = (ToggleButton) findViewById(R.id.rotateOrMoveToggleButton);
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -141,16 +129,6 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
                 }
             }
         });
-
-        final ImageButton loadButton = (ImageButton) findViewById(R.id.loadButton);
-        loadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadSTL();
-            }
-        });
-
-
 
         final ImageButton preferencesButton = (ImageButton) findViewById(R.id.preferencesButton);
         preferencesButton.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +149,7 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
             relativeLayout.addView(stlView);
 
             toggleButton.setVisibility(View.VISIBLE);
-
+            /*
             stlView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
@@ -179,9 +157,15 @@ public class STLViewActivity extends Activity implements FileListDialog.OnFileLi
                         ;
                     }
                 }
-            });
+            });*/
         }
     }
 
-
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
 }

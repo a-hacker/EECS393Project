@@ -9,9 +9,9 @@
     <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
         android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
-            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" app:popupTheme="@style/AppTheme.PopupOverlay" />
+    <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
+        android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary" app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         <Button
             android:id="@+id/create_button"
@@ -30,9 +30,8 @@
             android:id="@+id/edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_activity_edit_main"
+            android:text="@string/title_activity_gallery"
             android:onClick="edit"/>
-
         <Button
             android:id="@+id/print_button"
             android:layout_width="wrap_content"
@@ -51,14 +50,8 @@
             android:id="@+id/server_ip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="phone"/>
-
+            android:inputType="phone"
+            android:focusableInTouchMode="true"/>
     </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_main" />
-
-    <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+    <include layout="@layout/content_main"/>
 </android.support.design.widget.CoordinatorLayout>

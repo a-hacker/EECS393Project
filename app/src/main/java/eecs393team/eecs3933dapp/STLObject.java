@@ -95,11 +95,6 @@ public class STLObject {
 
     /**
      * FIXME 'STL format error detection' depends exceptions.
-     *
-     * @param stlBytes
-     * @param context
-     * @param progressDialog
-     * @return
      */
     private boolean processSTL(byte[] stlBytes, final Context context) {
         maxX = Float.MIN_VALUE;
@@ -143,7 +138,6 @@ public class STLObject {
                         vertexList.add(x);
                         vertexList.add(y);
                         vertexList.add(z);
-                        //Log.i("vertex add");
                     }
 
                     if (i % (stlLines.length / 50) == 0) {
@@ -204,10 +198,8 @@ public class STLObject {
                 List<Float> processResult = null;
                 try {
                     if (isText(stlBytes[0])) {
-                        //Log.i("trying text...");
                         processResult = processText(new String(stlBytes[0]));
                     } else {
-                        //Log.i("trying binary...");
                         processResult = processBinary(stlBytes[0]);
                     }
                 } catch (Exception e) {
@@ -227,8 +219,6 @@ public class STLObject {
             @Override
             protected void onPostExecute(List<Float> vertexList) {
 
-                //Log.i("normalList.size:" + normalList.size());
-                //Log.i("vertexList.size:" + vertexList.size());
 
                 if (normalList.size() < 1 || vertexList.size() < 1) {
                     Toast.makeText(context, context.getString(R.string.error_fetch_data), Toast.LENGTH_LONG).show();

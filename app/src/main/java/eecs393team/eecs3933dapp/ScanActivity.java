@@ -19,6 +19,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 public class ScanActivity extends Activity{
     private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    private static int fileNum = 0;
     private String ip;
     private ServerConnection myConnection;
     private Intent nextState;
@@ -45,7 +47,7 @@ public class ScanActivity extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+        setContentView(R.layout.activity_scan_gallery);
 
         //create new Intent
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -151,6 +153,8 @@ public class ScanActivity extends Activity{
             finally {
                 if (in != null)
                     try {
+
+                        waitForResponse(new_server);
                         in.close();
                     }
                     catch(Exception e){
@@ -172,6 +176,45 @@ public class ScanActivity extends Activity{
             connecting_graphic.setImageResource(R.drawable.red_x);
             // spawn back button
             nextState = new Intent(this, MainActivity.class);
+        }
+    }
+
+    public void waitForResponse(ServerConnection new_server){
+        FileOutputStream out = null;
+        InputStream inputStream = new_server.getServerInput();
+        try{
+            Log.d("File Recieve", "obtaining file info");
+            File STL = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "STLS");
+            if (!STL.exists()){
+                if (!STL.mkdirs())
+                    Log.d("File Recieve", "Folder not created");
+                else
+                    Log.d("File Recieve", "Folder created");
+            }
+            String path = STL.getAbsolutePath();
+            File f = new File(path+"/01.STL");
+            Log.d("File Recieve", "obtaining out info");
+            out = new FileOutputStream(f);
+            Log.d("File Recieve", "obtained out info");
+            byte[] buffer = new byte[1024]; // 1KB buffer size
+            int length = 0;
+            Log.d("File Recieve", "Starting to receive");
+            while ((length = inputStream.read(buffer, 0, buffer.length)) != -1) {
+                out.write(buffer, 0, length);
+                Log.d("File Recieve", "Got bytes!");
+            }
+            out.flush();
+        } catch(Exception e) {
+            Log.d("File Recieve", e.getMessage());
+        } finally {
+            if (out != null)
+                try {
+                    out.close();
+                }
+                catch(Exception e){
+
+                }
+            new_server.close(); // Will close the outputStream, too.
         }
     }
 
@@ -201,6 +244,7 @@ public class ScanActivity extends Activity{
                 //ServerConnection.sendFiles(fileUri.getPath());
                 connectToServer();
                 //upload(fileUri.getPath());
+
             } else if (resultCode == RESULT_CANCELED) {
                 // User cancelled the video capture
             } else {

@@ -73,7 +73,7 @@ public class CreateMainTests extends ActivityInstrumentationTestCase2<CreateMain
         mCreateMain.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mCreateMain.setServer("172.19.30.201");
+                mCreateMain.setServer("172.19.6.209");
                 mCreateMain.connectToServer();
             }
         });
@@ -82,7 +82,7 @@ public class CreateMainTests extends ActivityInstrumentationTestCase2<CreateMain
 
     @SmallTest
     public void testGetServer(){
-        assertEquals(mCreateMain.getServer().getServerIP(), "172.19.30.201");
+        assertEquals(mCreateMain.getServer().getServerIP(), "172.19.6.209");
     }
 }
 

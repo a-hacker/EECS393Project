@@ -28,7 +28,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         mMainActivity = getActivity();
         create_Button = (Button) getActivity().findViewById(R.id.create_button);
         edit_Button = (Button) getActivity().findViewById(R.id.edit_button);
-        print_Button = (Button) getActivity().findViewById(R.id.print_button);
     }
 
     public void testPreconditions() {
@@ -59,39 +58,22 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @MediumTest
-    public void testLaunchEdit(){
+    public void testLaunchGallery(){
         Instrumentation.ActivityMonitor STLViewMonitor =
-                getInstrumentation().addMonitor(STLViewActivity.class.getName(),
+                getInstrumentation().addMonitor(Gallery.class.getName(),
                         null, false);
         TouchUtils.clickView(this, edit_Button);
-        STLViewActivity stlViewActivity = (STLViewActivity)
+        Gallery stlViewActivity = (Gallery)
                 STLViewMonitor.waitForActivityWithTimeout(1000);
 
         assertNotNull("STLViewActivity is null", stlViewActivity);
         assertEquals("Monitor for STLViewActivity has not been called", 1, STLViewMonitor.getHits());
         assertEquals("Activity is of wrong type",
-                STLViewActivity.class, stlViewActivity.getClass());
+                Gallery.class, stlViewActivity.getClass());
         getInstrumentation().removeMonitor(STLViewMonitor);
         stlViewActivity.finish();
     }
 
-    @MediumTest
-    public void testLaunchPrint(){
-        Instrumentation.ActivityMonitor printMainMonitor =
-                getInstrumentation().addMonitor(PrintMain.class.getName(),
-                        null, false);
-
-        TouchUtils.clickView(this, print_Button);
-        PrintMain printMainActivity = (PrintMain)
-                printMainMonitor.waitForActivityWithTimeout(1000);
-
-        assertNotNull("PrintMain is null", printMainActivity);
-        assertEquals("Monitor for ProintMain has not been called", 1, printMainMonitor.getHits());
-        assertEquals("Activity is of wrong type",
-                PrintMain.class, printMainActivity.getClass());
-        getInstrumentation().removeMonitor(printMainMonitor);
-        printMainActivity.finish();
-    }
 
     @Override
     public void tearDown() throws Exception{

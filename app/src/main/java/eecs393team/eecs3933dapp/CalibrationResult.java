@@ -1,7 +1,7 @@
 package eecs393team.eecs3933dapp;
 
 /**
- * Grabbed from https://github.com/Itseez/opencv/blob/master/samples/android/camera-calibration
+ * inspired by https://github.com/Itseez/opencv/blob/master/samples/android/camera-calibration
  */
 import org.opencv.core.Mat;
 
@@ -9,6 +9,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+
+import java.io.FileWriter;
 
 public abstract class CalibrationResult {
     private static final String TAG = "OCVSample::CalibrationResult";
@@ -40,6 +42,12 @@ public abstract class CalibrationResult {
         editor.commit();
         Log.i(TAG, "Saved camera matrix: " + cameraMatrix.dump());
         Log.i(TAG, "Saved distortion coefficients: " + distortionCoefficients.dump());
+    }
+
+    public static boolean WriteToSettings(Activity activity, Mat cameraMatrix, Mat distortionCoefficients){
+        activity.getApplicationContext().getDir("Settings", Context.MODE_PRIVATE);
+        //FileWriter writer = new FileWriter();
+        return true;
     }
 
     public static boolean tryLoad(Activity activity, Mat cameraMatrix, Mat distortionCoefficients) {

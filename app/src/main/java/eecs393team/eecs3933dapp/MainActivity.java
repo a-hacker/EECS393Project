@@ -1,5 +1,6 @@
 package eecs393team.eecs3933dapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,11 +47,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void edit(View view){
-        //Intent intent = new Intent(this, EditMain.class);
-        //startActivity(intent);
-
-        //Commented out prior Edit intent because this may not be the final location for this.
-        Intent intent = new Intent(this, STLViewActivity.class);
+        Intent intent = new Intent(this, Gallery.class);
         startActivity(intent);
     }
 
@@ -58,25 +56,18 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void focusServerIP(MenuItem item){
+        EditText field = (EditText) findViewById(R.id.server_ip);
+        field.setFocusableInTouchMode(true);
+        field.requestFocus();
+        InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        im.showSoftInput(field, 0);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-/*
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
 }
