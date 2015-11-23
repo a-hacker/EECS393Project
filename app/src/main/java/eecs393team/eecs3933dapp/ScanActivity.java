@@ -14,11 +14,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -119,6 +121,7 @@ public class ScanActivity extends Activity{
         //if true
         if (success) {
             //spawn check
+            Log.d("ScanActivity", "Starting to send");
             OutputStream outputStream = new_server.getServerOutput();
             FileInputStream in = null;
             try {
@@ -130,6 +133,17 @@ public class ScanActivity extends Activity{
                     outputStream.write(buffer, 0, length);
                 }
                 outputStream.flush();
+                Log.d("ScanActivity", "waiting for reply");
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                InputStream inputStream = new_server.getServerInput();
+                byte[] b = new byte[1024];
+                while ( inputStream.read(b) != -1) {
+                    baos.write(b);
+                }
+                byte[] bytes = baos.toByteArray();
+                Log.d("ScanActivity", "The byte array");
+                Log.d("ScanActivity", bytes.toString());
             }
             catch(Exception e){
 
