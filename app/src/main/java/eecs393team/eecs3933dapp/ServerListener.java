@@ -4,6 +4,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -63,21 +64,32 @@ public class ServerListener implements Runnable {
             out = new FileOutputStream(f);
             Log.d("File Recieve", "got out info");
             //get buffer size
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            //BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             //Log.d("ScanActivity", "getting size");
             //int bufsize = Integer.parseInt(br.readLine());
             //Log.d("ScanActivity", "got size: " + bufsize);
-            byte[] buffer = new byte[556283]; // 1KB buffer size
+            DataInputStream dstream = new DataInputStream(in);
+            int size = 0;
+            while((size = dstream.available()) == 0){
+                Log.d("File Receive", "still waiting");
+            }
+            Log.d("File Receive", "buffer size is: " + size);
+            byte[] buffer = new byte[size]; // 1KB buffer size
             int length = 0;
             Log.d("File Recieve", "Starting to receive");
-            while ((length = in.read(buffer, 0, buffer.length)) != -1) {
-                out.write(buffer, 0, length);
-                Log.d("File Recieve", "Got bytes!");
+            while(size != 0) {
+                dstream.readFully(buffer);
+                size = dstream.available();
             }
+            //while ((length = in.read(buffer, 0, buffer.length)) != -1) {
+            //    out.write(buffer, 0, length);
+            //    Log.d("File Recieve", "Got bytes!");
+            //}
             Log.d("File Receive", "done");
             out.flush();
         } catch(Exception e) {
             Log.d("File Receive", "Still broke3");
+            Log.d("File Receive", e.toString());
         } finally {
             if (out != null)
                 try {
