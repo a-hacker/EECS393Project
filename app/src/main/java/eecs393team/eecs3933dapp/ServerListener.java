@@ -18,7 +18,7 @@ public class ServerListener implements Runnable {
 
     private InputStream in;
     private ServerConnection server;
-    private final int port = 8081;
+    private final int port = 8082;
     private String ip;
 
     public ServerListener(InputStream in, ServerConnection server, String ip){
@@ -70,16 +70,18 @@ public class ServerListener implements Runnable {
             //Log.d("ScanActivity", "got size: " + bufsize);
             DataInputStream dstream = new DataInputStream(in);
             int size = 0;
-            while((size = dstream.available()) == 0){
+            while(size == 0){
                 Log.d("File Receive", "still waiting");
+                size = dstream.readInt();
             }
             Log.d("File Receive", "buffer size is: " + size);
-            byte[] buffer = new byte[size]; // 1KB buffer size
-            int length = 0;
+            byte[] buffer = new byte[1024]; // 1KB buffer size
             Log.d("File Recieve", "Starting to receive");
-            while(size != 0) {
-                dstream.readFully(buffer);
-                size = dstream.available();
+            while(size > 0) {
+                int length = dstream.read(buffer);
+                out.write(buffer, 0, length);
+                size -= length;
+
             }
             //while ((length = in.read(buffer, 0, buffer.length)) != -1) {
             //    out.write(buffer, 0, length);
@@ -90,6 +92,7 @@ public class ServerListener implements Runnable {
         } catch(Exception e) {
             Log.d("File Receive", "Still broke3");
             Log.d("File Receive", e.toString());
+            Log.d("File Receive", e.getStackTrace().toString());
         } finally {
             if (out != null)
                 try {
